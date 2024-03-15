@@ -26,4 +26,5 @@ int main(int argc, char *argv[]) {
     wait(NULL);
     puts("1"); // newline
   }
+  return 0;
 }
