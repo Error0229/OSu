@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
     perror("fork");
     exit(EXIT_FAILURE);
   }
-  // child process
-  if (pid == 0) {
+  // paretn process
+  if (pid > 0) {
     close(pipes[0]);
     int src_fd = open(argv[1], O_RDONLY);
     if (src_fd == -1) {
@@ -46,7 +46,6 @@ int main(int argc, char *argv[]) {
     close(src_fd);
     close(pipes[1]);
   } else {
-    wait(NULL);
     close(pipes[1]);
     int dst_fd = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (dst_fd == -1) {
