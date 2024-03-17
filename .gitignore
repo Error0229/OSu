@@ -3,3 +3,10 @@
 !*.*
 !Makefile
 .vscode
+*.cmd
+*.ko
+*.o
+*.mod
+*.mod.c
+*.symvers
+*.order
