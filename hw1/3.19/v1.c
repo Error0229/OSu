@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   pid_t pid;
   int shmid;
   char *shmaddr;
-  if (argc != 2) {
+  if (argc <= 2) {
     printf("Usage: %s <command>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
       perror("shmdt");
       exit(EXIT_FAILURE);
     }
-    execlp(argv[1], argv[1], NULL);
+    execvp(argv[1], argv + 1);
     perror("execlp");
   } else {
     wait(NULL);

@@ -10,7 +10,7 @@
 
 #include <unistd.h>
 
-int main() {
+int main(int argc, char *argv[]) {
   int pipes[2];
   pid_t pid;
   struct timeval start, end;
@@ -26,7 +26,7 @@ int main() {
     gettimeofday(&start, NULL);
     write(pipes[1], &start, sizeof(struct timeval));
     close(pipes[1]);
-    execlp("ls", "ls", NULL);
+    execvp(argv[1], argv + 1);
     perror("execlp");
   } else {
     wait(NULL);
