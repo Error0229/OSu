@@ -13,7 +13,7 @@ int main(void) {
   int id = 0;
   for (id = 0; id < MAX_LINE / 2 + 1; id++) {
     args[id] = (char *)malloc(MAX_LINE * sizeof(char));
-    history[id] = (char *)malloc(MAX_LINE * sizeof(char));
+    history[id] = NULL;
   }
   int should_run = 1;
   while (should_run) {
@@ -21,18 +21,24 @@ int main(void) {
     fflush(stdout);
     char *input = (char *)malloc(MAX_LINE * sizeof(char));
     fgets(input, MAX_LINE, stdin);
+    if (input[strlen(input) - 1] == '\n') {
+      input[strlen(input) - 1] = '\0';
+    }
     int i = 0;
     char *token = strtok(input, " ");
     while (token != NULL) {
-      memset(args[i], 0, MAX_LINE);
+      if (args[i] == NULL) {
+        args[i] = (char *)malloc(MAX_LINE * sizeof(char));
+      }
       strncpy(args[i], token, strlen(token) + 1);
       token = strtok(NULL, " ");
       i++;
     }
-    args[i - 1][strlen(args[i - 1]) - 1] = '\0'; // remove '\n' from args[i-1]
+    free(args[i]);
     args[i] = NULL;
     if (strncmp(args[0], "exit", 4) == 0) {
       should_run = 0;
+      free(input);
       break;
     }
     if (strncmp(args[0], "!!", 2) == 0) {
@@ -42,18 +48,23 @@ int main(void) {
       }
       int j = 0;
       while (history[j] != NULL) {
-        memset(args[j], 0, MAX_LINE);
-        args[j] = history[j];
+        if (args[j] == NULL) {
+          args[j] = (char *)malloc(MAX_LINE * sizeof(char));
+        }
+        strncpy(args[j], history[j], strlen(history[j]) + 1);
         j++;
       }
+      free(args[j]);
       args[j] = NULL;
     }
     int j = 0;
     while (args[j] != NULL) {
-      memset(history[j], 0, MAX_LINE);
-      history[j] = args[j];
+      if (history[j] == NULL)
+        history[j] = (char *)malloc(MAX_LINE * sizeof(char));
+      strncpy(history[j], args[j], strlen(args[j]) + 1);
       j++;
     }
+    free(history[j]);
     history[j] = NULL;
     pid_t pid = fork();
     if (pid < 0) {
@@ -122,5 +133,9 @@ int main(void) {
       wait(NULL);
     }
     free(input);
+  }
+  for (id = 0; id < MAX_LINE / 2 + 1; id++) {
+    free(args[id]);
+    free(history[id]);
   }
 }
