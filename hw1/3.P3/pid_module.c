@@ -5,7 +5,7 @@
 #include <linux/slab.h>
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("A pid module");
+MODULE_DESCRIPTION("A module that iterate over all the process");
 MODULE_AUTHOR("catJAM");
 #define DFS_METHOD
 void DFS(struct task_struct *task) {
@@ -18,7 +18,7 @@ void DFS(struct task_struct *task) {
 static int __init pid_module_init(void) {
   // use for_each_process to print all the pids
   printk(KERN_INFO "pid module created\n");
-#ifdef MACRO
+#ifdef MACRO_METHOD
   struct task_struct *task;
   for_each_process(task) {
     printk(KERN_INFO "name: %s, pid: [%d], state: %c\n", task->comm, task->pid,

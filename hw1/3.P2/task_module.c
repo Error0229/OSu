@@ -11,7 +11,6 @@ static int pid;
 
 static int task_show(struct seq_file *m, void *v) {
   struct task_struct *task;
-  printk(KERN_INFO "pid: %d\n", pid);
   task = pid_task(find_vpid(pid), PIDTYPE_PID);
   if (task == NULL) {
     seq_printf(m, "No such process\n");
@@ -39,15 +38,6 @@ static ssize_t task_write(struct file *file, const char __user *buffer,
   return count;
 }
 
-static const struct file_operations task_fops = {
-    .owner = THIS_MODULE,
-    .open = task_open,
-    .read = seq_read,
-    .llseek = seq_lseek,
-    .release = single_release,
-    .write = task_write,
-};
-
 static int __init task_module_init(void) {
   static const struct proc_ops task_fops = {
       .proc_open = task_open,
@@ -56,14 +46,14 @@ static int __init task_module_init(void) {
       .proc_release = single_release,
       .proc_write = task_write,
   };
-  proc_create("task", 0666, NULL, &task_fops);
-  printk(KERN_INFO "/proc/task created\n");
+  proc_create("pid", 0666, NULL, &task_fops);
+  printk(KERN_INFO "/proc/pid created\n");
   return 0;
 }
 
 static void __exit task_module_exit(void) {
-  remove_proc_entry("task", NULL);
-  printk(KERN_INFO "/proc/task removed\n");
+  remove_proc_entry("pid", NULL);
+  printk(KERN_INFO "/proc/pid removed\n");
 }
 
 module_init(task_module_init);
