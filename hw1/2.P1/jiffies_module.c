@@ -6,7 +6,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("A /proc/jiffies module");
-MODULE_AUTHOR("catJAM");
+MODULE_AUTHOR("👾");
 
 static int jiffies_show(struct seq_file *m, void *v) {
   seq_printf(m, "%llu\n", (unsigned long long)jiffies);
@@ -16,15 +16,6 @@ static int jiffies_show(struct seq_file *m, void *v) {
 static int jiffies_open(struct inode *inode, struct file *file) {
   return single_open(file, jiffies_show, NULL);
 }
-
-static const struct file_operations jiffies_fops = {
-    .owner = THIS_MODULE,
-    .open = jiffies_open,
-    .read = seq_read,
-    .llseek = seq_lseek,
-    .release = single_release,
-};
-
 static int __init jiffies_module_init(void) {
   // Create the /proc/jiffies entry
   static const struct proc_ops jiffies_fops = {
