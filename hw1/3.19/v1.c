@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   pid_t pid;
   int shmid;
   char *shmaddr;
-  if (argc <= 2) {
+  if (argc <= 1) {
     printf("Usage: %s <command>\n", argv[0]);
     exit(EXIT_FAILURE);
   }
