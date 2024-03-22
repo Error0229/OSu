@@ -3,8 +3,8 @@
 #include <linux/slab.h>
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("A module that implement linked list");
-MODULE_AUTHOR("catJAM");
+MODULE_DESCRIPTION("A module that using kernel list to store custom struct");
+MODULE_AUTHOR("👾");
 
 struct color {
   int red;

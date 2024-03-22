@@ -5,7 +5,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("A module about the task information");
-MODULE_AUTHOR("catJAM");
+MODULE_AUTHOR("👾");
 
 static int pid;
 

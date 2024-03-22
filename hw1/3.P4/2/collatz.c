@@ -6,7 +6,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("A module that implement collatz sequence");
-MODULE_AUTHOR("catJAM");
+MODULE_AUTHOR("👾");
 
 static int start = 25;
 module_param(start, int, 0);

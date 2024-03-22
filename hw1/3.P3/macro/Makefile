@@ -1,10 +1,10 @@
-obj-m += ds_module.o
+obj-m += pid_module.o
 
 all:
 	make -C /usr/src/linux-headers-$(shell uname -r) M=$(PWD) modules
 clean:
 	make -C /usr/src/linux-headers-$(shell uname -r) M=$(PWD) clean
 install:
-	sudo insmod ds_module.ko
+	sudo insmod pid_module.ko
 remove:
-	sudo rmmod ds_module
+	sudo rmmod pid_module
