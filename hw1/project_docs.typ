@@ -94,7 +94,7 @@ Result image
     figure(
       image("3.P3/macro/result.png", width:90%),
       caption: [
-        The result for `sudo dmesg | tail` after `make install` and `make remove` in `3.P3/macro`
+        The result for `sudo dmesg | tail` after `make install` in `3.P3/macro`
       ]
     )
   ),
@@ -104,7 +104,7 @@ Result image
     figure(
       image("./3.P3/dfs/result.png", width:90%),
       caption: [
-        The result for `sudo dmesg | tail` after `make install` and `make remove` in `3.P3/dfs`
+        The result for `sudo dmesg | tail` after `make install` in `3.P3/dfs`
       ]
     )
   ) 
@@ -134,7 +134,7 @@ Result image
     figure(
       image("3.P4/1/result.png", width:90%),
       caption: [
-        The result for `sudo dmesg | tail` after `make install` and `make remove` in `3.P4/1`
+        The result for `sudo dmesg | tail` after `make install` in `3.P4/1`
       ]
     )
   ),
@@ -144,7 +144,7 @@ Result image
     figure(
       image("./3.P4/2/result.png", width:90%),
       caption: [
-        The result for `sudo dmesg | tail` after `sudo insmod ./collatz.ko start=40` and `sudo rmmod collatz` in `3.P4/2`
+        The result for `sudo dmesg | tail` after `sudo insmod ./collatz.ko start=40` in `3.P4/2`
       ]
     )
   ) 
