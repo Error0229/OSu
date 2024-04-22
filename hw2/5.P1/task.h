@@ -6,6 +6,6 @@ typedef struct task {
   int priority;
   int burst;
   int tid;
-  bool ran;
+  int flag;
 } task;
 #endif

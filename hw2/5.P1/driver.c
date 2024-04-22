@@ -7,17 +7,19 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 int start_times[MAX_TASKS], waiting_times[MAX_TASKS];
 int start, turn_around_time, waiting_time, response_time, now;
+
 typedef struct node {
   task *task;
   struct node *next, *prev;
 } node;
-node *head, *tail, *current, *ran;
+node *head, *tail, *current, *ran, *last_ran;
 void print_list() {
   node *cur = head->next;
   puts("*********************************");
   while (cur != NULL) {
-    printf("Task = [name: %s, priority: %d, burst: %d]\n", cur->task->name,
-           cur->task->priority, cur->task->burst);
+    printf("Task = [name: %s, priority: %d, burst: %d, flag: %d]\n",
+           cur->task->name, cur->task->priority, cur->task->burst,
+           cur->task->flag);
     cur = cur->next;
   }
   puts("*********************************");
@@ -51,6 +53,10 @@ typedef struct Algorithm {
   void (*schedule)(void);
   task *(*pickNextTask)(void);
 } Algorithm;
+Algorithm *algo;
+void schedule() { algo->schedule(); }
+
+void pickNextTask() { algo->pickNextTask(); }
 task *fcfs_pickNextTask(void) {
   if (head->next == tail)
     return NULL;
@@ -110,7 +116,7 @@ task *roundRobin_pickNextTask(void) {
     cur->next = ran;
     ran->prev = cur;
   }
-
+  last_ran = cur;
   return cur->task;
 }
 void roundRobin_schedule(void) {
@@ -137,31 +143,24 @@ void roundRobin_schedule(void) {
     if (cur->burst == 0) {
       turn_around_time += now - start;
       printf("Task %s finished.\n", cur->name);
-      erase(ran->prev);
+      erase(last_ran);
     } else {
       waiting_times[cur->tid] = now;
     }
   }
 }
 task *sjf_pickNextTask(void) {
-  node *cur = head;
-  node *min = head;
-  while (cur) {
+  if (head->next == tail)
+    return NULL;
+  node *cur = head->next;
+  node *min = head->next;
+  while (cur != tail) {
     if (cur->task->burst < min->task->burst) {
       min = cur;
     }
     cur = cur->next;
-    if (cur == head)
-      break;
   }
-  node *pre = min;
-
-  if (min->task->burst == 0) {
-    erase(min);
-  }
-  if (head == NULL || tail == NULL) {
-    return NULL;
-  }
+  last_ran = min;
   return min->task;
 }
 void sjf_schedule(void) {
@@ -170,7 +169,6 @@ void sjf_schedule(void) {
   while ((cur = sjf_pickNextTask())) {
     __sync_fetch_and_add(&id, 1);
     cur->tid = id;
-    start_times[cur->tid] = now;
     response_time += now - start;
     run(cur);
     printf("Task %s is running for %d units. Remaining burst = 0 units.\n",
@@ -182,26 +180,21 @@ void sjf_schedule(void) {
                                      // the completion time
     // no waiting time
     cur->burst = 0;
-    // free(cur);
+    erase(last_ran);
   }
 }
 task *priority_pickNextTask(void) {
-  node *cur = head;
-  node *max = head;
-  while (cur) {
+  if (head->next == tail)
+    return NULL;
+  node *cur = head->next->next;
+  node *max = head->next;
+  while (cur != tail) {
     if (cur->task->priority > max->task->priority) {
       max = cur;
     }
     cur = cur->next;
-    if (cur == head)
-      break;
   }
-  if (max->task->burst == 0) {
-    erase(max);
-  }
-  if (head == NULL || tail == NULL) {
-    return NULL;
-  }
+  last_ran = max;
   return max->task;
 }
 void priority_schedule(void) {
@@ -222,40 +215,90 @@ void priority_schedule(void) {
                                      // the completion time
     // no waiting time
     cur->burst = 0;
-    // free(cur);
+    erase(last_ran);
   }
 }
 task *priority_rr_pickNextTask(void) {
-  static int ran[MAX_TASKS];
-  node *cur = head;
-  node *min = head;
-  while (cur) {
-    if (cur->task->priority < min->task->priority) {
-      min = cur;
-    }
-    cur = cur->next;
-    if (cur == head)
-      break;
-  }
-  if (min->task->burst == 0) {
-    erase(min);
-  }
-  if (head == NULL || tail == NULL) {
+  int current_max = 0;
+  int max_count = 1;
+  if (head->next == tail) {
     return NULL;
   }
-  return min->task;
+  node *cur = head->next->next;
+  node *max = head->next;
+  // find max priority and count the number of tasks with the same priority
+  while (cur != tail) {
+    if (cur->task->priority > max->task->priority) {
+      max = cur;
+      current_max = cur->task->priority;
+      max_count = 1;
+    } else if (cur->task->priority == max->task->priority) {
+      max_count++;
+    }
+    cur = cur->next;
+  }
+  // if there is only one task with the max priority, run it
+  if (max_count == 1) {
+    if (max->task->flag == -1) {
+      last_ran = max;
+      max->task->flag = 2; // the task can run till end
+      return max->task;
+    }
+  }
+  // else find the task that has max priority and not been run yet
+  cur = head->next;
+  while (cur != tail) {
+    if (cur->task->priority == current_max) {
+      if (cur->task->flag == -1) {
+        last_ran = cur;
+        cur->task->flag = 1; // the task can run for 10 units
+        return cur->task;
+      }
+    }
+    cur = cur->next;
+  }
+  // if all tasks have highest priority and have been run, reset the ran_tasks
+  node *reset = head->next;
+  while (reset != tail) {
+    reset->task->flag = -1;
+    reset = reset->next;
+  }
+  return priority_rr_pickNextTask();
 }
-void priority_rr_schedule(void) {}
+void priority_rr_schedule(void) {
+  task *cur;
+  int id = 0;
+  while ((cur = priority_rr_pickNextTask())) {
+    if (cur->tid == -1) {
+      __sync_fetch_and_add(&id, 1);
+      cur->tid = id;
+      response_time += now - start;
+    } else {
+      waiting_time += now - waiting_times[cur->tid];
+    }
+    run(cur);
+    int run_for = min(10, cur->burst);
+    if (cur->flag == 2) {
+      run_for = cur->burst;
+    }
+    now += run_for;
+    cur->burst -= run_for;
+    printf("Task %s is running for %d units. Remaining burst = %d units.\n",
+           cur->name, run_for, cur->burst);
+    if (cur->burst == 0) {
+      turn_around_time += now - start;
+      printf("Task %s finished.\n", cur->name);
+      erase(last_ran);
+    } else {
+      waiting_times[cur->tid] = now;
+    }
+  }
+}
 Algorithm fcfs = {fcfs_schedule, fcfs_pickNextTask};
 Algorithm roundRobin = {roundRobin_schedule, roundRobin_pickNextTask};
 Algorithm sjf = {sjf_schedule, sjf_pickNextTask};
 Algorithm priority = {priority_schedule, priority_pickNextTask};
 Algorithm priority_rr = {priority_rr_schedule, priority_rr_pickNextTask};
-
-Algorithm *algo;
-void schedule() { algo->schedule(); }
-
-void pickNextTask() { algo->pickNextTask(); }
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
@@ -284,7 +327,7 @@ int main(int argc, char *argv[]) {
     }
     total++;
     t->tid = -1;
-    t->ran = false;
+    t->flag = -1;
     push_back(t);
   }
   fclose(file);
