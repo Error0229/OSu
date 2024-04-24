@@ -71,8 +71,8 @@ void fcfs_schedule(void) {
     start_times[cur->tid] = now;
     response_time += now - start;
     run(cur);
-    printf("Task %s is running for %d units. Remaining burst = 0 units.\n",
-           cur->name, cur->burst);
+    printf("Task %s ran for %d units. Remaining burst = 0 units.\n", cur->name,
+           cur->burst);
     printf("Task %s finished.\n", cur->name);
     now += cur->burst;
     turn_around_time += now - start; // all tasks are assumed to arrive at time
@@ -138,8 +138,8 @@ void roundRobin_schedule(void) {
     int run_for = min(10, cur->burst);
     now += run_for;
     cur->burst -= run_for;
-    printf("Task %s is running for %d units. Remaining burst = %d units.\n",
-           cur->name, run_for, cur->burst);
+    printf("Task %s ran for %d units. Remaining burst = %d units.\n", cur->name,
+           run_for, cur->burst);
     if (cur->burst == 0) {
       turn_around_time += now - start;
       printf("Task %s finished.\n", cur->name);
@@ -171,8 +171,8 @@ void sjf_schedule(void) {
     cur->tid = id;
     response_time += now - start;
     run(cur);
-    printf("Task %s is running for %d units. Remaining burst = 0 units.\n",
-           cur->name, cur->burst);
+    printf("Task %s ran for %d units. Remaining burst = 0 units.\n", cur->name,
+           cur->burst);
     printf("Task %s finished.\n", cur->name);
     now += cur->burst;
     turn_around_time += now - start; // all tasks are assumed to arrive at time
@@ -206,8 +206,8 @@ void priority_schedule(void) {
     start_times[cur->tid] = now;
     response_time += now - start;
     run(cur);
-    printf("Task %s is running for %d units. Remaining burst = 0 units.\n",
-           cur->name, cur->burst);
+    printf("Task %s ran for %d units. Remaining burst = 0 units.\n", cur->name,
+           cur->burst);
     printf("Task %s finished.\n", cur->name);
     now += cur->burst;
     turn_around_time += now - start; // all tasks are assumed to arrive at time
@@ -283,8 +283,8 @@ void priority_rr_schedule(void) {
     }
     now += run_for;
     cur->burst -= run_for;
-    printf("Task %s is running for %d units. Remaining burst = %d units.\n",
-           cur->name, run_for, cur->burst);
+    printf("Task %s ran for %d units. Remaining burst = %d units.\n", cur->name,
+           run_for, cur->burst);
     if (cur->burst == 0) {
       turn_around_time += now - start;
       printf("Task %s finished.\n", cur->name);
@@ -349,9 +349,11 @@ int main(int argc, char *argv[]) {
   algo = &priority_rr;
 #endif
   algo->schedule();
+  puts("All tasks done 😸");
   printf("Average turnaround time = %.2f\n",
          (double)turn_around_time / (double)total);
-  printf("Average waiting time = %.2f\n", (double)waiting_time / (double)total);
+  printf("Average waiting time = %.2f\n",
+         (double)(waiting_time + response_time) / (double)total);
   printf("Average response time = %.2f\n",
          (double)response_time / (double)total);
   return 0;
