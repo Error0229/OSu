@@ -23,6 +23,16 @@ gcc main.c -pthread -o main
 The result for `./main` in `4.P1`
 ])
 
+= Ch4 project 2
+Commands ```bash
+cd 4.P2
+gcc main.c -pthread -o main
+./main
+``` Result image
+#figure(image("4.P2/result.png"), caption: [
+The result for `./main` in `4.P2`
+])
+
 = Ch5 project 1
 Commands ```bash
 cd 5.P1
