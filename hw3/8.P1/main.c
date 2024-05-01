@@ -93,13 +93,14 @@ void *customer_thread(void *arg) {
     for (int i = 0; i < RESOURCES; i++) {
       request[i] = rand() % (customers[customer_id].need[i] + 1);
     }
+    printf("Customer %d request resources\n", customer_id);
+    for (int i = 0; i < RESOURCES; i++) {
+      printf("resource %d: request %d, allocation %d, need %d\n", i, request[i],
+             customers[customer_id].allocation[i],
+             customers[customer_id].need[i]);
+    }
     if (request_resources(customer_id, request) == 0) {
-      printf("Customer %d request resources\n", customer_id);
-      for (int i = 0; i < RESOURCES; i++) {
-        printf("resource %d: request %d, allocation %d, need %d\n", i,
-               request[i], customers[customer_id].allocation[i],
-               customers[customer_id].need[i]);
-      }
+      puts("request granted");
       bool flag = true;
       for (int i = 0; i < RESOURCES; i++) {
         if (customers[customer_id].need[i] != 0) {
@@ -111,6 +112,9 @@ void *customer_thread(void *arg) {
         release_resources(customer_id);
         pthread_exit(NULL);
       }
+      sleep(rand() % 3 + 1);
+    } else {
+      puts("request denied");
       sleep(rand() % 3 + 1);
     }
   }
