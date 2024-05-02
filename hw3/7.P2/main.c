@@ -12,18 +12,14 @@ int ta_sleeping = 0;
 int queue[MAX_STUDENTS];
 int front = 0, rear = 0, size = 0;
 void enqueue(int id) {
-  pthread_mutex_lock(&queue_lock);
   queue[rear] = id;
   size += 1;
   rear = (rear + 1) % MAX_STUDENTS;
-  pthread_mutex_unlock(&queue_lock);
 }
 int dequeue() {
-  pthread_mutex_lock(&queue_lock);
   int id = queue[front];
   size -= 1;
   front = (front + 1) % MAX_STUDENTS;
-  pthread_mutex_unlock(&queue_lock);
   return id;
 }
 int get_size() {
@@ -46,13 +42,16 @@ void *student(void *arg) {
       break;
     } else {
       pthread_mutex_unlock(&office_lock);
-      if (get_size() == 3) {
+      pthread_mutex_lock(&queue_lock);
+      if (size == 3) {
+        pthread_mutex_unlock(&queue_lock);
         printf("Student %d comes but the hallway is full\n", id);
         sleep(rand() % 10 + 1);
         continue;
       }
       printf("Student %d comes and waits in the hallway\n", id);
       enqueue(id);
+      pthread_mutex_unlock(&queue_lock);
       while (student_next != id) // wait for the TA to call
         ;
       sem_wait(&student_ta);
@@ -71,7 +70,9 @@ void *TA(void *arg) {
       pthread_mutex_unlock(&office_lock);
       sem_wait(&student_ta);
     } else {
+      pthread_mutex_lock(&queue_lock);
       student_next = dequeue();
+      pthread_mutex_unlock(&queue_lock);
       printf("TA calling the student %d\n", student_next);
       sem_post(&student_ta);
     }
