@@ -46,9 +46,8 @@ The result for `./main` in `8.32`
 Commands```bash
 cd 9.28
 gcc main.c -pthread -o main
-./main
-19986
+./main 19986
 ```
 #figure(image("9.28/result.png"), caption: [
-The result for `./main` in `9.28`
+The result of `9.28`
 ])
