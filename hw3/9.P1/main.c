@@ -101,7 +101,7 @@ void print() {
   while (next != NULL) {
     // printf("cur->name: %s\n", cur->str);
     if (cur->end != next->begin) {
-      printf("Address [%d:%d] Unused\n", cur->end, next->begin);
+      printf("Address [%d:%d] Unused\n", cur->end, next->begin - 1);
     }
     if (next->end - next->begin > 0)
       printf("Address [%d:%d] Process %s\n", next->begin, next->end - 1,
