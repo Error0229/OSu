@@ -101,6 +101,7 @@ void *customer_thread(void *arg) {
     }
     if (request_resources(customer_id, request) == 0) {
       puts("request granted");
+      puts("-------------------------------------");
       bool flag = true;
       for (int i = 0; i < RESOURCES; i++) {
         if (customers[customer_id].need[i] != 0) {
@@ -115,11 +116,19 @@ void *customer_thread(void *arg) {
       sleep(rand() % 3 + 1);
     } else {
       puts("request denied");
+      puts("-------------------------------------");
       sleep(rand() % 3 + 1);
     }
   }
 }
 int main(int argc, char *argv[]) {
+  if (argc != RESOURCES + 1) {
+    fprintf(stderr,
+            "Usage: %s <resource 1> <resource 2> <resource 3> <resource "
+            "4>\n",
+            argv[0]);
+    return 1;
+  }
   for (int i = 0; i < RESOURCES; i++) {
     available[i] = atoi(argv[i + 1]);
   }

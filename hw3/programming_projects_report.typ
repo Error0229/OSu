@@ -22,83 +22,54 @@ make
 #figure(image("7.P1/result.png"), caption: [
 The result for `./main` in `4.P1`
 ])
-
+#pagebreak()
 = Ch7 project 2
 Commands ```bash
 cd 7.P2
 gcc main.c -pthread -o main
 ./main
 ``` Result image
-#figure(image("7.P2/result.png"), caption: [
-The result for `./main` in `4.P2`
+#figure(image("7.P2/result.png", width: 50%), caption: [
+The result for `./main` in `7.P2`
 ])
 
-= Ch5 project 1
+= Ch7 project 3
 Commands ```bash
-cd 5.P1
-make fcfs
-./fcfs schedule.txt
-make sjf
-./sjf schedule.txt
-make priority
-./priority schedule.txt
-make round_robin
-./round_robin schedule.txt
-make priority_rr
-./priority_rr schedule.txt
-```
+cd 7.P3
+gcc main.c -pthread -o main
+./main
+``` Result image
+#figure(image("7.P3/result.png"), caption: [
+The result for `./main` in `7.P3`
+])
+#pagebreak()
 
-Result images
-#grid(rows: 2, columns: 2, grid.cell(
-  colspan: 1,
-  align: horizon,
-  figure(image("5.P1/result_fcfs.png", width: 95%), caption: [
-  The result for `./fcfs schedule.txt` in `5.P1`
-  ]),
-), grid.cell(
-  colspan: 1,
-  align: horizon,
-  figure(image("5.P1/result_sjf.png", width: 95%), caption: [
-  The result for `./sjf schedule.txt` in `5.P1`
-  ]),
-), grid.cell(
-  colspan: 1,
-  align: horizon,
-  figure(image("5.P1/result_priority.png", width: 95%), caption: [
-  The result for `./priority schedule.txt` in `5.P1`
-  ]),
-), grid.cell(
-  colspan: 1,
-  align: horizon,
-  figure(image("5.P1/result_round_robin.png", width: 95%), caption: [
-  The result for `./round_robin schedule.txt` in `5.P1`
-  ]),
-), grid.cell(
-  colspan: 1,
-  align: horizon,
-  figure(image("5.P1/result_priority_rr.png", width: 95%), caption: [
-  The result for `./priority_rr schedule.txt` in `5.P1`
-  ]),
-))
-// #import "@preview/timeliney:0.0.1"
+= Ch7 project 4
+Commands ```bash
+cd 7.P4
+gcc main.c -pthread -o main
+./main
+``` Result image
+#figure(image("7.P4/result.png"), caption: [
+The result for `./main` in `7.P4`
+])
 
-// #timeliney.timeline(
-//   show-grid: true,
-//   {
-//     import timeliney: *
+= Ch8 project 1
+Commands ```bash
+cd 8.P1
+gcc main.c -pthread -o main
+./main
+``` Result image
+#figure(image("8.P1/result.png"), caption: [
+Part of the result for `./main` in `8.P1`
+])
 
-//     headerline(group(([*Time line*], 19)))
-
-//     taskgroup({
-//       task($P_1$, (0, 3), style: (stroke: 3pt + black))
-//       task($P_2$, (3, 4), (16, 19), style: (stroke: 3pt + black))
-//       task($P_3$, (4, 6), (8, 9), (14, 15), style: (stroke: 3pt + black))
-//       task($P_4$, (6, 8), (10, 11), (15, 16), style: (stroke: 3pt + black))
-//       task($P_5$, (9, 10), style: (stroke: 3pt + black))
-//       task($P_6$, (11, 14), style: (stroke: 3pt + black))
-//     })
-//     for i in range(0, 20) {
-//       milestone(align(center, str(i * 5)), at: i, style: (stroke: 1pt + gray))
-//     }
-//   },
-// )
+= Ch9 project 1
+Commands ```bash
+cd 9.P1
+gcc main.c -pthread -o main
+./main
+``` Result image
+#figure(image("9.P1/result.png"), caption: [
+The result for `./main` in `9.P1`
+])
